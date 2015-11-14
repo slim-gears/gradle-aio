@@ -56,12 +56,14 @@ class AndroidAioPlugin implements Plugin<Project> {
                 compileSdkVersion config.compileSdkVersion
                 buildToolsVersion config.buildToolsVersion
 
-                signingConfigs {
-                    release {
-                        keyAlias project.name
-                        storeFile project.file(config.keyStoreFile)
-                        storePassword config.keyStorePassword
-                        keyPassword config.keyPassword
+                if (isApplicationProject) {
+                    signingConfigs {
+                        release {
+                            keyAlias project.name
+                            storeFile project.file(config.keyStoreFile)
+                            storePassword config.keyStorePassword
+                            keyPassword config.keyPassword
+                        }
                     }
                 }
 
