@@ -18,8 +18,10 @@ class AndroidAioConfiguration extends BasicConfiguration {
 
     String playServicesVersion = '8.3.0'
     List<String> usePlayServices
+    List<String> useSupportLibraries
 
     AndroidAioConfiguration(Project project) {
         super(project)
+        setPropertiesFromProject(AndroidAioConfiguration, project)
     }
 }

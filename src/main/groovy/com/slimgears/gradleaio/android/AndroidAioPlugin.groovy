@@ -51,7 +51,6 @@ class AndroidAioPlugin implements Plugin<Project> {
             log.info("Applying android configuration")
 
             project.apply plugin: "com.android.$projectType"
-            log.info("keyStoreFile: $config.keyStoreFile")
 
             project.android {
                 compileSdkVersion config.compileSdkVersion
@@ -156,6 +155,16 @@ class AndroidAioPlugin implements Plugin<Project> {
             }
         }
 
+        void applySupportLibraries() {
+            if (config.useSupportLibraries && !config.useSupportLibraries.isEmpty()) {
+                config.useSupportLibraries.each { lib ->
+                    project.dependencies {
+                        compile "com.android.support:$lib:$config.buildToolsVersion"
+                    }
+                }
+            }
+        }
+
         Properties getLocalProperties() {
             Properties properties = new Properties()
             properties.load(rootProject.file('local.properties').newDataInputStream())
@@ -173,5 +182,6 @@ class AndroidAioPlugin implements Plugin<Project> {
         configurator.applyApt()
         configurator.applyUnitTests()
         configurator.applyPlayServices()
+        configurator.applySupportLibraries()
     }
 }

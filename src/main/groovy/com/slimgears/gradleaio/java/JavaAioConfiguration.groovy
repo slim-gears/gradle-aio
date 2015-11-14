@@ -7,5 +7,6 @@ class JavaAioConfiguration extends BasicConfiguration {
 
     JavaAioConfiguration(Project project) {
         super(project)
+        setPropertiesFromProject(JavaAioConfiguration, project)
     }
 }

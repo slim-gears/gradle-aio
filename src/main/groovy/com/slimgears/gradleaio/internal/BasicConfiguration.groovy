@@ -8,6 +8,7 @@ class BasicConfiguration extends AbstractConfiguration {
     String robolectricVersion = '3.0'
 
     BasicConfiguration(Project project) {
-        super(project)
+        super()
+        setPropertiesFromProject(BasicConfiguration, project)
     }
 }
