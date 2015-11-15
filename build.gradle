@@ -23,7 +23,7 @@ configurations.compile.exclude group: 'com.android.tools.external.lombok'
 
 
 group = 'com.slimgears.gradle-aio'
-version = '0.1-SNAPSHOT'
+version = '0.2-SNAPSHOT'
 
 apply plugin: 'maven'
 
