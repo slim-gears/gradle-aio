@@ -1,5 +1,8 @@
 Gradle Android and Java All-In-One
 ==================================
+[![Build Status](https://travis-ci.org/slim-gears/gradle-aio.svg?branch=master)](https://travis-ci.org/slim-gears/gradle-aio)
+----------------------------------
+
 
 This plugin's purpose is to reduce a gradle boilerplate for typical `build.gradle` scripts for
 and java gradle projects.
