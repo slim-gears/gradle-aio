@@ -1,12 +1,9 @@
 package com.slimgears.gradleio
 import com.neenbedankt.gradle.androidapt.AndroidAptPlugin
-import com.slimgears.gradleaio.android.AndroidAioApplicationConfig
 import com.slimgears.gradleaio.android.AndroidAioApplicationPlugin
-import com.slimgears.gradleaio.android.AndroidAioConfig
 import com.slimgears.gradleaio.android.AndroidAioLibraryPlugin
 import com.slimgears.gradleaio.internal.ConfigContainer
 import com.slimgears.gradleaio.java.JavaAioPlugin
-import com.slimgears.gradleaio.publishing.PublishingConfig
 import com.slimgears.gradleaio.publishing.PublishingPlugin
 import com.slimgears.gradleaio.root.RootProjectAioPlugin
 import me.tatarka.RetrolambdaPlugin
@@ -32,22 +29,22 @@ class AioPluginsTest {
 
         def configContainer = project.extensions.findByType(ConfigContainer)
 
-        configContainer.configure(AndroidAioConfig).with {
+        configContainer.androidAio.with {
                 minSdkVersion = 16
                 targetSdkVersion = 24
                 useSupportLibraries = ['recyclerview-v7']
                 usePlayServices = ['identity', 'plus', 'auth']
         }
 
-        configContainer.configure(AndroidAioApplicationConfig).with {
+        configContainer.androidAppAio.with {
             keyStoreFile = 'test-file'
             keyStorePassword = 'test-password'
             keyPassword = 'test-password'
         }
 
-        configContainer.configure(PublishingConfig).with {
+        configContainer.publishingAio.with {
             artifactId = 'test-artifact'
-            configureBintray().with {
+            bintray.with {
                 user = 'test-user'
                 key = 'test-key'
             }

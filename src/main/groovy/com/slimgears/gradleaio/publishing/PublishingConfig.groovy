@@ -18,7 +18,7 @@ class PublishingConfig {
     String artifactId = null
     BintrayConfig bintray = null
 
-    BintrayConfig configureBintray() {
-        return bintray = bintray ?: new BintrayConfig()
+    BintrayConfig getBintray() {
+        return this.bintray = this.bintray ?: new BintrayConfig()
     }
 }

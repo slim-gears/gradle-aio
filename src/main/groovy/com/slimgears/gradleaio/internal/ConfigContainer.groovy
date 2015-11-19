@@ -1,4 +1,9 @@
 package com.slimgears.gradleaio.internal
+
+import com.slimgears.gradleaio.android.AndroidAioApplicationConfig
+import com.slimgears.gradleaio.android.AndroidAioConfig
+import com.slimgears.gradleaio.java.JavaAioConfig
+import com.slimgears.gradleaio.publishing.PublishingConfig
 import org.gradle.api.Project
 
 class ConfigContainer {
@@ -13,6 +18,26 @@ class ConfigContainer {
 
     public <C> C configure(Class<C> type) {
         return configByType(type)
+    }
+
+    public AndroidAioConfig getAndroidAio() {
+        return configure(AndroidAioConfig)
+    }
+
+    public AndroidAioApplicationConfig getAndroidAppAio() {
+        return configure(AndroidAioApplicationConfig)
+    }
+
+    public BasicConfig getBasicAio() {
+        return configure(BasicConfig)
+    }
+
+    public JavaAioConfig getJavaAio() {
+        return configure(JavaAioConfig)
+    }
+
+    public PublishingConfig getPublishingAio() {
+        return configure(PublishingConfig)
     }
 
     public <C> C configByType(Class<C> configClass) {
