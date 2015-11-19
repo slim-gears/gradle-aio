@@ -1,6 +1,7 @@
 package com.slimgears.gradleio
 import com.neenbedankt.gradle.androidapt.AndroidAptPlugin
 import com.slimgears.gradleaio.android.AndroidAioApplicationPlugin
+import com.slimgears.gradleaio.android.AndroidAioConfig
 import com.slimgears.gradleaio.android.AndroidAioLibraryPlugin
 import com.slimgears.gradleaio.internal.ConfigContainer
 import com.slimgears.gradleaio.java.JavaAioPlugin
@@ -90,5 +91,10 @@ class AioPluginsTest {
 
         Assert.assertTrue(project.plugins.hasPlugin('maven-publish'))
         Assert.assertTrue(project.plugins.hasPlugin('com.jfrog.bintray'))
+    }
+
+    @Test void applyAndroidApplicationAioWithoutRootAio_shouldSucceed() {
+        def localProject = ProjectBuilder.builder().build()
+        localProject.apply plugin: AndroidAioApplicationPlugin
     }
 }
