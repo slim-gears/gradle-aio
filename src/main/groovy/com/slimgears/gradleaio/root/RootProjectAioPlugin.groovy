@@ -1,5 +1,6 @@
 package com.slimgears.gradleaio.root
 
+import com.slimgears.gradleaio.internal.ConfigContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Delete;
@@ -17,8 +18,9 @@ class RootProjectAioPlugin implements Plugin<Project> {
         }
 
         project.allprojects {
-            it.apply plugin: "idea"
+            it.extensions.create('aioConfig', ConfigContainer, it)
 
+            it.apply plugin: "idea"
             it.repositories {
                 jcenter()
                 maven { url "https://jitpack.io" }

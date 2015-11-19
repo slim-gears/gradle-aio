@@ -1,25 +1,22 @@
 package com.slimgears.gradleaio.java
 
+import com.slimgears.gradleaio.internal.AbstractProjectConfigurator
+import com.slimgears.gradleaio.internal.ProjectPlugin
 import me.tatarka.RetrolambdaPlugin
 import org.gradle.api.JavaVersion
-import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.logging.Logger
-import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.Copy
 
-class JavaAioPlugin implements Plugin<Project> {
-    final Logger log = Logging.getLogger JavaAioPlugin
+class JavaAioPlugin extends ProjectPlugin<JavaAioConfigurator> {
+    JavaAioPlugin() {
+        super({project -> new JavaAioConfigurator(project)})
+    }
 
-    class ProjectConfigurator {
-        Project project
-        Project rootProject
-        JavaAioConfiguration config
+    static class JavaAioConfigurator extends AbstractProjectConfigurator {
+        @Lazy JavaAioConfig config = { configByType(JavaAioConfig) }()
 
-        ProjectConfigurator(Project project) {
-            this.project = project
-            this.rootProject = project.rootProject
-            this.config = new JavaAioConfiguration(project)
+        JavaAioConfigurator(Project project) {
+            super(project)
         }
 
         void applyJava() {
@@ -74,15 +71,13 @@ class JavaAioPlugin implements Plugin<Project> {
                 testCompile "org.mockito:mockito-core:$config.mockitoVersion"
             }
         }
-    }
 
-    @Override
-    void apply(Project project) {
-        ProjectConfigurator configurator = new ProjectConfigurator(project)
-
-        configurator.applyJava()
-        configurator.applyRetrolambda()
-        configurator.applyApt()
-        configurator.applyUnitTests()
+        @Override
+        void apply() {
+            applyJava()
+            applyRetrolambda()
+            applyApt()
+            applyUnitTests()
+        }
     }
 }
