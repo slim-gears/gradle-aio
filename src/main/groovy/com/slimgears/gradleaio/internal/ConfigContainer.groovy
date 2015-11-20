@@ -1,24 +1,29 @@
 package com.slimgears.gradleaio.internal
-
 import com.slimgears.gradleaio.android.AndroidAioApplicationConfig
 import com.slimgears.gradleaio.android.AndroidAioConfig
 import com.slimgears.gradleaio.java.JavaAioConfig
 import com.slimgears.gradleaio.publishing.PublishingConfig
-import org.gradle.api.Action
+import groovy.json.JsonBuilder
 import org.gradle.api.Project
+import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
 
 class ConfigContainer {
+    final Logger log = Logging.getLogger ConfigContainer
     final Project project
-    final ConfigContainer parentContainer
     final Map<Class, Object> configMap = new HashMap<>()
 
     public ConfigContainer(Project project) {
         this.project = project
-        parentContainer = (project.parent) ? project.parent.extensions.findByType(ConfigContainer) : null
+    }
+
+    public ConfigContainer getParentContainer() {
+        return project.parent ? project.parent.extensions.findByType(this.class) : null
     }
 
     public <C> C configure(Class<C> type, Closure initializer) {
         C config = configByType(type)
+        initializer.resolveStrategy = Closure.DELEGATE_FIRST
         initializer.delegate = config
         initializer()
         return config

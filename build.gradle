@@ -10,7 +10,7 @@ dependencies {
 
     compile gradleApi()
     compile localGroovy()
-    compile 'com.android.tools.build:gradle:1.4.0-beta6'
+    compile 'com.android.tools.build:gradle:1.5.0'
     compile 'com.github.JakeWharton:sdk-manager-plugin:b182b519f6'
     compile 'com.github.denis-itskovich:gradle-retrolambda:3.2.3-fix-134.1'
     compile 'com.neenbedankt.gradle.plugins:android-apt:1.8'
@@ -22,14 +22,13 @@ dependencies {
 
 configurations.compile.exclude group: 'com.android.tools.external.lombok'
 
-
 group = 'com.slimgears.gradle-aio'
-version = '0.2-SNAPSHOT'
+version = '0.4-SNAPSHOT'
 
 apply plugin: 'maven'
 
 install {
     repositories.mavenInstaller {
-        pom.artifactId = 'gradle-aio'
+        pom.artifactId = project.name
     }
 }

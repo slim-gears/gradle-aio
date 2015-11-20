@@ -1,4 +1,6 @@
 package com.slimgears.gradleio
+
+import com.jfrog.bintray.gradle.BintrayUploadTask
 import com.neenbedankt.gradle.androidapt.AndroidAptPlugin
 import com.slimgears.gradleaio.android.AndroidAioApplicationPlugin
 import com.slimgears.gradleaio.android.AndroidAioConfig
@@ -44,11 +46,8 @@ class AioPluginsTest {
         }
 
         configContainer.publishingAio {
-            artifactId = 'test-artifact'
-            bintray {
-                user = 'test-user'
-                key = 'test-key'
-            }
+            bintrayUser = 'test-user'
+            bintrayKey = 'test-key'
         }
     }
 
@@ -86,6 +85,7 @@ class AioPluginsTest {
 
         Assert.assertTrue(project.plugins.hasPlugin('maven-publish'))
         Assert.assertTrue(project.plugins.hasPlugin('com.jfrog.bintray'))
+        Assert.assertTrue(project.tasks.bintrayUpload instanceof BintrayUploadTask)
     }
 
     @Test void applyAndroidAioPublishingAio_appliesRequiredPlugins() {
@@ -94,6 +94,7 @@ class AioPluginsTest {
 
         Assert.assertTrue(project.plugins.hasPlugin('maven-publish'))
         Assert.assertTrue(project.plugins.hasPlugin('com.jfrog.bintray'))
+        Assert.assertTrue(project.tasks.bintrayUpload instanceof BintrayUploadTask)
     }
 
     @Test void applyAndroidApplicationAioWithoutRootAio_shouldSucceed() {
