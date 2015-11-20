@@ -73,8 +73,11 @@ class AioPluginsTest {
 
     @Test void applyJavaAio_appliesRequiredPlugins() {
         project.apply plugin: JavaAioPlugin
+
+        Assert.assertTrue(project.plugins.hasPlugin('java'))
         Assert.assertTrue(project.plugins.hasPlugin(AptPlugin))
         Assert.assertTrue(project.plugins.hasPlugin(RetrolambdaPlugin))
+        Assert.assertTrue(project.tasks.hasProperty('sourceJar').asBoolean())
     }
 
     @Test void applyJavaAioPublishingAio_appliesRequiredPlugins() {

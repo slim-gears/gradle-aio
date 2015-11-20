@@ -6,6 +6,7 @@ import me.tatarka.RetrolambdaPlugin
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.bundling.Jar
 
 class JavaAioPlugin extends ProjectPlugin<JavaAioConfigurator> {
     JavaAioPlugin() {
@@ -72,12 +73,20 @@ class JavaAioPlugin extends ProjectPlugin<JavaAioConfigurator> {
             }
         }
 
+        void applySourceJar() {
+            project.tasks.create(name: 'sourceJar', type: Jar) {
+                classifier = 'sources'
+                from project.sourceSets.main.allJava
+            }
+        }
+
         @Override
         void apply() {
             applyJava()
             applyRetrolambda()
             applyApt()
             applyUnitTests()
+            applySourceJar()
         }
     }
 }
