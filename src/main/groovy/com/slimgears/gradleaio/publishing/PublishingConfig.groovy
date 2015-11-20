@@ -7,8 +7,8 @@ class PublishingConfig {
     private String _organization
     private String _vcsUrl
 
-    String bintrayUser
-    String bintrayKey
+    String bintrayUser = System.getenv('BINTRAY_USER')
+    String bintrayKey = System.getenv('BINTRAY_KEY')
     String githubOrg
 
     String repository
