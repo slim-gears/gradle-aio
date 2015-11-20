@@ -41,7 +41,7 @@ class PublishingPlugin extends ProjectPlugin<PublishingConfigurator> {
                         }
 
                         artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
-                        artifact (sourceJar)
+                        artifact (project.sourceJar)
                     }
                 }
             }
