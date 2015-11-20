@@ -18,7 +18,7 @@ class RootProjectAioPlugin implements Plugin<Project> {
         }
 
         project.allprojects {
-            it.extensions.create('aioConfig', ConfigContainer, it)
+            it.extensions.aioConfig = new ConfigContainer(it)
 
             it.apply plugin: "idea"
             it.repositories {

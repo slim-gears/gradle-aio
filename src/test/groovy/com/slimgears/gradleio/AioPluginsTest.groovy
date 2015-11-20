@@ -30,22 +30,22 @@ class AioPluginsTest {
 
         def configContainer = project.extensions.findByType(ConfigContainer)
 
-        configContainer.androidAio.with {
+        configContainer.androidAio {
                 minSdkVersion = 16
                 targetSdkVersion = 24
                 useSupportLibraries = ['recyclerview-v7']
                 usePlayServices = ['identity', 'plus', 'auth']
         }
 
-        configContainer.androidAppAio.with {
+        configContainer.androidAppAio {
             keyStoreFile = 'test-file'
             keyStorePassword = 'test-password'
             keyPassword = 'test-password'
         }
 
-        configContainer.publishingAio.with {
+        configContainer.publishingAio {
             artifactId = 'test-artifact'
-            bintray.with {
+            bintray {
                 user = 'test-user'
                 key = 'test-key'
             }
@@ -96,5 +96,19 @@ class AioPluginsTest {
     @Test void applyAndroidApplicationAioWithoutRootAio_shouldSucceed() {
         def localProject = ProjectBuilder.builder().build()
         localProject.apply plugin: AndroidAioApplicationPlugin
+    }
+
+    @Test void configurationUsingExtension_shouldNotThrow() {
+        project.aioConfig {
+            androidAio {
+                minSdkVersion = 14
+            }
+        }
+
+        Assert.assertEquals(14,
+                project.extensions
+                    .findByType(ConfigContainer)
+                    .configByType(AndroidAioConfig)
+                    .minSdkVersion)
     }
 }

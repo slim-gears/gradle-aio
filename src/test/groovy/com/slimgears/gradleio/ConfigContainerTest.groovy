@@ -29,11 +29,11 @@ class ConfigContainerTest {
     @Test void configurationHierarchy_shouldReturnCorrectValues() {
         assertNotNull(configContainer)
 
-        rootProject.extensions.findByType(ConfigContainer).configure(BasicConfig).with {
+        rootProject.extensions.findByType(ConfigContainer).configure(BasicConfig) {
             junitVersion = '4.10'
         }
 
-        configContainer.configure(AndroidAioConfig).with {
+        configContainer.configure(AndroidAioConfig) {
             minSdkVersion = 1
             targetSdkVersion = 24
         }

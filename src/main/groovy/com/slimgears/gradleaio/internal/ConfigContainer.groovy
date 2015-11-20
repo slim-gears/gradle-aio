@@ -4,6 +4,7 @@ import com.slimgears.gradleaio.android.AndroidAioApplicationConfig
 import com.slimgears.gradleaio.android.AndroidAioConfig
 import com.slimgears.gradleaio.java.JavaAioConfig
 import com.slimgears.gradleaio.publishing.PublishingConfig
+import org.gradle.api.Action
 import org.gradle.api.Project
 
 class ConfigContainer {
@@ -16,28 +17,31 @@ class ConfigContainer {
         parentContainer = (project.parent) ? project.parent.extensions.findByType(ConfigContainer) : null
     }
 
-    public <C> C configure(Class<C> type) {
-        return configByType(type)
+    public <C> C configure(Class<C> type, Closure initializer) {
+        C config = configByType(type)
+        initializer.delegate = config
+        initializer()
+        return config
     }
 
-    public AndroidAioConfig getAndroidAio() {
-        return configure(AndroidAioConfig)
+    public AndroidAioConfig androidAio(Closure initializer) {
+        return configure(AndroidAioConfig, initializer)
     }
 
-    public AndroidAioApplicationConfig getAndroidAppAio() {
-        return configure(AndroidAioApplicationConfig)
+    public AndroidAioApplicationConfig androidAppAio(Closure initializer) {
+        return configure(AndroidAioApplicationConfig, initializer)
     }
 
-    public BasicConfig getBasicAio() {
-        return configure(BasicConfig)
+    public BasicConfig basicAio(Closure initializer) {
+        return configure(BasicConfig, initializer)
     }
 
-    public JavaAioConfig getJavaAio() {
-        return configure(JavaAioConfig)
+    public JavaAioConfig javaAio(Closure initializer) {
+        return configure(JavaAioConfig, initializer)
     }
 
-    public PublishingConfig getPublishingAio() {
-        return configure(PublishingConfig)
+    public PublishingConfig publishingAio(Closure initializer) {
+        return configure(PublishingConfig, initializer)
     }
 
     public <C> C configByType(Class<C> configClass) {
@@ -59,7 +63,7 @@ class ConfigContainer {
 
         mergeProperties(type.superclass, config)
         Object configPart = configByType(type)
-        mergeProperties(type, configPart, config)
+        mergeProperties(configPart, config)
 
         return config
     }
@@ -68,12 +72,12 @@ class ConfigContainer {
         Class configClass = config.class
         C clonedConfig = configClass.newInstance()
 
-        mergeProperties(configClass, config, clonedConfig)
+        mergeProperties(config, clonedConfig)
 
         return clonedConfig
     }
 
-    private static void mergeProperties(Class type, Object src, Object dest) {
+    private static void mergeProperties(Object src, Object dest) {
         dest.properties.keySet()
                 .findAll { String prop ->
                     prop != 'class' &&
