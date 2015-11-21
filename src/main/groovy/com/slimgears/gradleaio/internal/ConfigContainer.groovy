@@ -3,13 +3,9 @@ import com.slimgears.gradleaio.android.AndroidAioApplicationConfig
 import com.slimgears.gradleaio.android.AndroidAioConfig
 import com.slimgears.gradleaio.java.JavaAioConfig
 import com.slimgears.gradleaio.publishing.PublishingConfig
-import groovy.json.JsonBuilder
 import org.gradle.api.Project
-import org.gradle.api.logging.Logger
-import org.gradle.api.logging.Logging
 
 class ConfigContainer {
-    final Logger log = Logging.getLogger ConfigContainer
     final Project project
     final Map<Class, Object> configMap = new HashMap<>()
 
@@ -53,6 +49,7 @@ class ConfigContainer {
         if (configMap.containsKey(configClass)) {
             return (C)configMap.get(configClass)
         }
+
         C config = createConfig(configClass)
         configMap.put(configClass, config)
         return config
@@ -60,7 +57,9 @@ class ConfigContainer {
 
     private <C> C createConfig(Class<C> type) {
         C config = parentContainer ? cloneConfig(parentContainer.configByType(type)) : type.newInstance()
-        return mergeProperties(type.superclass, config)
+        mergeProperties(type.superclass, config)
+        mergeProperties(project, config)
+        return config
     }
 
     private <C> C mergeProperties(Class type, C config) {
