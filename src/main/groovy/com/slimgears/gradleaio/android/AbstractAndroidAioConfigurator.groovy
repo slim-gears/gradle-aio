@@ -34,6 +34,8 @@ class AbstractAndroidAioConfigurator extends AbstractProjectConfigurator {
             defaultMethods false
             incremental true
         }
+
+        project.configurations.compile.exclude group: 'com.android.tools.external.lombok'
     }
 
     void applyAndroid() {

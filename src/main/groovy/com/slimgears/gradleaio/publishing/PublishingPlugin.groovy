@@ -30,7 +30,7 @@ class PublishingPlugin extends ProjectPlugin<PublishingConfigurator> {
 
                 publications {
                     maven(MavenPublication) {
-                        if (project.plugins.hasPlugin('java')) {
+                        if (project.components.hasProperty('java')) {
                             from project.components.java
                         }
 
@@ -52,6 +52,10 @@ class PublishingPlugin extends ProjectPlugin<PublishingConfigurator> {
                         artifact (project.tasks.sourceJar)
                     }
                 }
+
+                project.tasks.create(name: 'install', dependsOn: 'publishMavenPublicationToMavenLocal') << {
+                    log.info "Installing $project.name"
+                }
             }
         }
 
@@ -66,7 +70,7 @@ class PublishingPlugin extends ProjectPlugin<PublishingConfigurator> {
                 key = config.bintrayKey
                 publications = ['maven'] //When uploading Maven-based publication files
                 dryRun = false //Whether to run this as dry-run, without deploying
-                publish = true //If version should be auto published after an upload
+                publish = !project.version.toString().contains('SNAPSHOT')
 
                 pkg {
                     repo = config.repository ?: project.rootProject.name
@@ -92,6 +96,8 @@ class PublishingPlugin extends ProjectPlugin<PublishingConfigurator> {
                     }
                 }
             }
+
+            project.tasks.create(name: 'upload', dependsOn: 'bintrayUpload')
         }
 
         @Override
