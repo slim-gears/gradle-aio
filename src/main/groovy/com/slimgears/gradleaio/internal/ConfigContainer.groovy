@@ -83,13 +83,7 @@ class ConfigContainer {
 
     private static void mergeProperties(Object src, Object dest) {
         dest.properties.keySet()
-                .findAll { String prop ->
-                    prop != 'class' &&
-                    src.hasProperty(prop) &&
-                    src[prop]
-                }
-                .each { String prop ->
-                    dest[prop] = src[prop]
-                }
+            .findAll { String prop -> prop != 'class' && src.hasProperty(prop) && src[prop] }
+            .each { String prop -> dest[prop] = src[prop] }
     }
 }
