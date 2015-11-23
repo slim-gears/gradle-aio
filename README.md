@@ -32,23 +32,6 @@ Usage
 
 ##### Root project
 ```groovy
-ext {
-    versionCode = System.getenv('BUILD_NUMBER') as Integer ?: 10000
-    versionName = "0.1-$versionCode"
-
-    /* Optional */ playServicesVersion = 'play-services-version'
-
-    /* Optional */ minSdkVersion = 10
-    /* Optional */ targetSdkVersion = 23
-    /* Optional */ compileSdkVersion = 23
-    /* Optional */ buildToolsVersion = '23.0.1'
-    /* Optional */ playServicesVersion = '8.3.0'
-
-    /* Optional */ junitVersion = '4.12'
-    /* Optional */ mockitoVersion = '2.0.31'
-    /* Optional */ robolectricVersion = '3.0'
-}
-
 buildscripts {
     repositories {
         jcenter()
@@ -56,28 +39,29 @@ buildscripts {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.github.slim-gears:gradle-aio:master-SNAPSHOT'
+        classpath 'com.github.slim-gears:gradle-aio:0.4.5'
     }
 }
+
+apply plugin: 'root-project-aio'
 ```
 
 ##### Android library project
 ```groovy
-ext {
-   /* Optional */ usePlayServices = ['identity', 'plus']
-}
-
 apply plugin: 'android-lib-aio'
 ```
 
 ##### For android application
 ```groovy
-ext {
+aioConfig {
+  androidAppAio {
+    versionCode = System.getenv('BUILD_NUMBER') as Integer ?: 0
+    versionName = "0.1-$versionCode"
+  
     keyStoreFile = 'path-to-key-store-file'
     keyStorePassword = 'key-store-password'
     keyPassword = 'key-password'
-
-    /* Optional */ usePlayServices = ['identity', 'plus']
+  }
 }
 
 apply plugin: 'android-app-aio'
@@ -85,10 +69,5 @@ apply plugin: 'android-app-aio'
 
 ### For java library
 ```groovy
-ext {
-    /* Optional */ junitVersion = '4.12'
-    /* Optional */ mockitoVersion = '2.0.31'
-}
-
 apply plugin: 'java-lib-aio'
 ```
