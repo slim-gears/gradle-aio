@@ -104,8 +104,10 @@ class AbstractAndroidAioConfigurator extends AbstractProjectConfigurator {
     }
 
     void applyPlayServices() {
-        if (config.usePlayServices && !config.usePlayServices.isEmpty()) {
-            project.apply plugin: "com.google.gms.google-services"
+        if (config.usePlayServices) {
+            if (project.file('google-services.json').exists()) {
+                project.apply plugin: "com.google.gms.google-services"
+            }
 
             config.usePlayServices.each { service ->
                 project.dependencies {

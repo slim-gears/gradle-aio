@@ -15,17 +15,22 @@ import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4)
 class AioPluginsTest {
+    @Rule public final TemporaryFolder testProjectDir = new TemporaryFolder();
+
     Project project
 
     @Before void setUp() {
         project = ProjectBuilder.builder()
                 .withName('test-project')
+                .withProjectDir(testProjectDir.root)
                 .build()
 
         project.apply plugin: RootProjectAioPlugin
@@ -33,10 +38,10 @@ class AioPluginsTest {
         def configContainer = project.extensions.findByType(ConfigContainer)
 
         configContainer.androidAio {
-                minSdkVersion = 16
-                targetSdkVersion = 24
-                useSupportLibraries = ['recyclerview-v7']
-                usePlayServices = ['identity', 'plus', 'auth']
+            minSdkVersion = 16
+            targetSdkVersion = 24
+            useSupportLibraries = ['recyclerview-v7']
+            usePlayServices = ['identity', 'plus', 'auth']
         }
 
         configContainer.androidAppAio {
@@ -52,49 +57,52 @@ class AioPluginsTest {
     }
 
     @Test void applyAndroidLibraryAio_appliesRequiredPlugins() {
+        testProjectDir.newFile('google-services.json').write("")
+
         project.apply plugin: AndroidAioLibraryPlugin
-        Assert.assertTrue(project.plugins.hasPlugin('com.android.library'))
-        Assert.assertFalse(project.plugins.hasPlugin('com.android.application'))
-        Assert.assertTrue(project.plugins.hasPlugin('com.google.gms.google-services'))
-        Assert.assertTrue(project.plugins.hasPlugin(AndroidAptPlugin))
-        Assert.assertTrue(project.plugins.hasPlugin(RetrolambdaPlugin))
-        Assert.assertTrue(project.tasks.sourceJar != null)
+
+        Assert.assertTrue project.plugins.hasPlugin('com.android.library')
+        Assert.assertFalse project.plugins.hasPlugin('com.android.application')
+        Assert.assertTrue project.plugins.hasPlugin('com.google.gms.google-services')
+        Assert.assertTrue project.plugins.hasPlugin(AndroidAptPlugin)
+        Assert.assertTrue project.plugins.hasPlugin(RetrolambdaPlugin)
+        Assert.assertTrue project.tasks.sourceJar != null
     }
 
     @Test void applyAndroidApplicationAio_appliesRequiredPlugins() {
         project.apply plugin: AndroidAioApplicationPlugin
-        Assert.assertTrue(project.pluginManager.hasPlugin('com.android.application'))
-        Assert.assertFalse(project.pluginManager.hasPlugin('com.android.library'))
-        Assert.assertTrue(project.plugins.hasPlugin(AndroidAptPlugin))
-        Assert.assertTrue(project.plugins.hasPlugin(RetrolambdaPlugin))
-        Assert.assertTrue(project.tasks.hasProperty('sourceJar').asBoolean())
+        Assert.assertTrue project.pluginManager.hasPlugin('com.android.application')
+        Assert.assertFalse project.pluginManager.hasPlugin('com.android.library')
+        Assert.assertTrue project.plugins.hasPlugin(AndroidAptPlugin)
+        Assert.assertTrue project.plugins.hasPlugin(RetrolambdaPlugin)
+        Assert.assertTrue project.tasks.hasProperty('sourceJar').asBoolean()
     }
 
     @Test void applyJavaAio_appliesRequiredPlugins() {
         project.apply plugin: JavaAioPlugin
 
-        Assert.assertTrue(project.plugins.hasPlugin('java'))
-        Assert.assertTrue(project.plugins.hasPlugin(AptPlugin))
-        Assert.assertTrue(project.plugins.hasPlugin(RetrolambdaPlugin))
-        Assert.assertTrue(project.tasks.hasProperty('sourceJar').asBoolean())
+        Assert.assertTrue project.plugins.hasPlugin('java')
+        Assert.assertTrue project.plugins.hasPlugin(AptPlugin)
+        Assert.assertTrue project.plugins.hasPlugin(RetrolambdaPlugin)
+        Assert.assertTrue project.tasks.hasProperty('sourceJar').asBoolean()
     }
 
     @Test void applyJavaAioPublishingAio_appliesRequiredPlugins() {
         project.apply plugin: JavaAioPlugin
         project.apply plugin: PublishingPlugin
 
-        Assert.assertTrue(project.plugins.hasPlugin('maven-publish'))
-        Assert.assertTrue(project.plugins.hasPlugin('com.jfrog.bintray'))
-        Assert.assertTrue(project.tasks.bintrayUpload instanceof BintrayUploadTask)
+        Assert.assertTrue project.plugins.hasPlugin('maven-publish')
+        Assert.assertTrue project.plugins.hasPlugin('com.jfrog.bintray')
+        Assert.assertTrue project.tasks.bintrayUpload instanceof BintrayUploadTask
     }
 
     @Test void applyAndroidAioPublishingAio_appliesRequiredPlugins() {
         project.apply plugin: AndroidAioLibraryPlugin
         project.apply plugin: PublishingPlugin
 
-        Assert.assertTrue(project.plugins.hasPlugin('maven-publish'))
-        Assert.assertTrue(project.plugins.hasPlugin('com.jfrog.bintray'))
-        Assert.assertTrue(project.tasks.bintrayUpload instanceof BintrayUploadTask)
+        Assert.assertTrue project.plugins.hasPlugin('maven-publish')
+        Assert.assertTrue project.plugins.hasPlugin('com.jfrog.bintray')
+        Assert.assertTrue project.tasks.bintrayUpload instanceof BintrayUploadTask
     }
 
     @Test void applyAndroidApplicationAioWithoutRootAio_shouldSucceed() {

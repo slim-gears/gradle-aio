@@ -36,7 +36,7 @@ dependencies {
 configurations.compile.exclude group: 'com.android.tools.external.lombok'
 
 group = 'com.slimgears.gradle-aio'
-version = '0.4.6'
+version = '0.4.7'
 
 aioConfig {
     publishingAio {
