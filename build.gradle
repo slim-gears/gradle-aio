@@ -29,8 +29,8 @@ dependencies {
     compile 'com.neenbedankt.gradle.plugins:android-apt:1.+'
     compile 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.+'
     compile 'com.google.gms:google-services:1.5.+'
-    compile 'net.ltgt.gradle:gradle-apt-plugin:0.+'
-    compile 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+    compile 'net.ltgt.gradle:gradle-apt-plugin:0.4'
+    compile 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
 }
 
 configurations.compile.exclude group: 'com.android.tools.external.lombok'
