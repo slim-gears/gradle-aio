@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.slim-gears:gradle-aio:0.4.3'
+        classpath 'com.slimgears.gradle-aio:gradle-aio:0.4.10'
     }
 }
 
@@ -36,7 +36,7 @@ dependencies {
 configurations.compile.exclude group: 'com.android.tools.external.lombok'
 
 group = 'com.slimgears.gradle-aio'
-version = '0.4.9'
+version = '0.4.10'
 
 aioConfig {
     publishingAio {

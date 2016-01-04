@@ -53,7 +53,7 @@ class PublishingPlugin extends ProjectPlugin<PublishingConfigurator> {
                     }
                 }
 
-                project.tasks.create(name: 'install', dependsOn: 'publishMavenPublicationToMavenLocal') << {
+                project.tasks.create(name: 'install', dependsOn: ['build', 'publishMavenPublicationToMavenLocal']) << {
                     log.info "Installing $project.name"
                 }
             }
