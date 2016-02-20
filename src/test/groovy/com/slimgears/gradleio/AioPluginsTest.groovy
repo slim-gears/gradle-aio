@@ -20,7 +20,8 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-
+import groovy.json.*
+    
 @RunWith(JUnit4)
 class AioPluginsTest {
     @Rule public final TemporaryFolder testProjectDir = new TemporaryFolder();
@@ -122,5 +123,9 @@ class AioPluginsTest {
                     .findByType(ConfigContainer)
                     .configByType(AndroidAioConfig)
                     .minSdkVersion)
+    }
+    
+    @Test void ideaTask_shouldCreateProjectFiles() {
+        project.tasks['idea'].execute()
     }
 }

@@ -5,6 +5,21 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class RootProjectAioPlugin implements Plugin<Project> {
+    void writeXml(Node rootNode, String path) {
+        def filePrinter = new PrintWriter(path)
+        def xmlPrinter = new XmlNodePrinter(filePrinter)
+        filePrinter.println('<?xml version="1.0" encoding="UTF-8"?>')
+        xmlPrinter.print(rootNode)
+    }
+    
+    Node createProjectRootNode() {
+        return new Node(null, 'project', [version: 4])
+    }
+    
+    String trimPath(String path) {
+        return path.endsWith('/') ? path.substring(0, path.length() - 1) : path
+    }
+    
     @Override
     void apply(Project project) {
         project.allprojects {
@@ -39,25 +54,49 @@ class RootProjectAioPlugin implements Plugin<Project> {
         }
 
         project.tasks.ideaProject.doLast {
-            def rootNode = new Node(null, 'project', [version: 4])
-            def modulesNode = rootNode
+            def modulesRootNode = createProjectRootNode()
+            def modulesNode = modulesRootNode
                     .appendNode('component', [name: 'ProjectModuleManager'])
                     .appendNode('modules')
+            
+            def gradleRootNode = createProjectRootNode()
+            def gradleNode = gradleRootNode
+                    .appendNode('component', [name: 'GradleSettings'])
+                    .appendNode('option', [name: 'linkedExternalProjectsSettings'])
+                    .appendNode('GradleProjectSettings')
 
-            def rootUri = project.projectDir.toURI()
+            def rootProjectUri = project.projectDir.toURI().toString()
+            def gradleHomeUri = project.gradle.gradleHomeDir.toURI().toString()
+            def isWrapper = gradleHomeUri.startsWith(rootProjectUri)
+            def gradleHomeDir = isWrapper 
+                ? '$PROJECT_DIR$' + File.separator + gradleHomeUri.substring(rootProjectUri.length())
+                : project.gradle.gradleHomeDir
+            
+            gradleNode.appendNode('option', [name: 'distributionType', value: isWrapper ? 'DEFAULT_WRAPPED' : 'LOCAL'])
+            gradleNode.appendNode('option', [name: 'externalProjectPath', value: '$PROJECT_DIR$'])
+            gradleNode.appendNode('option', [name: 'gradleHome', value: gradleHomeDir])
+            def gradleModulesSetNode = gradleNode
+                    .appendNode('option', [name: 'modules'])
+                    .appendNode('set')
+            def gradleMyModulesSetNode = gradleNode
+                    .appendNode('option', [name: 'myModules'])
+                    .appendNode('set')
+                    
             project.allprojects {
-                def projectUri = it.projectDir.toURI()
-                def relativeDir = projectUri.toString().substring(rootUri.toString().length())
+                def projectUri = it.projectDir.toURI().toString()
+                def relativeDir = projectUri.toString().substring(rootProjectUri.length())
+                def projectDir = trimPath("\$PROJECT_DIR\$/${relativeDir}")
                 modulesNode.appendNode('module', [
                         fileurl: "file://\$PROJECT_DIR\$/${relativeDir}${it.name}.iml",
                         filepath: "\$PROJECT_DIR\$/${relativeDir}${it.name}.iml"])
+                
+                gradleModulesSetNode.appendNode('option', [value: projectDir])
+                gradleMyModulesSetNode.appendNode('option', [value: projectDir])
             }
 
             project.file('.idea').mkdir()
-            def filePrinter = new PrintWriter("$project.projectDir/.idea/modules.xml")
-            def xmlPrinter = new XmlNodePrinter(filePrinter)
-            filePrinter.println('<?xml version="1.0" encoding="UTF-8"?>')
-            xmlPrinter.print(rootNode)
+            writeXml(modulesRootNode, "$project.projectDir/.idea/modules.xml")
+            writeXml(gradleRootNode, "$project.projectDir/.idea/gradle.xml")
             project.delete "${project.name}.ipr"
         }
 
