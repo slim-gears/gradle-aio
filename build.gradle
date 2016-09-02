@@ -23,7 +23,7 @@ dependencies {
 
     compile gradleApi()
     compile localGroovy()
-    compile 'com.android.tools.build:gradle:2.14.+'
+    compile 'com.android.tools.build:gradle:2.2.+'
     compile 'com.github.JakeWharton:sdk-manager-plugin:b182b519f6'
     compile 'gradle.plugin.me.tatarka:gradle-retrolambda:3.2.4'
     compile 'com.neenbedankt.gradle.plugins:android-apt:1.+'
