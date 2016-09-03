@@ -31,6 +31,7 @@ dependencies {
     compile 'com.google.gms:google-services:1.5.+'
     compile 'net.ltgt.gradle:gradle-apt-plugin:0.4'
     compile 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+    testCompile 'junit:junit:4.12'
 }
 
 configurations.compile.exclude group: 'com.android.tools.external.lombok'
